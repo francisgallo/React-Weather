@@ -48,10 +48,10 @@ var bundler = watchify(browserify({
 
 function bundle(){
   return bundler
-  .bundle()
-  .on ('error',notify)
-  .pipe(source('main.js'))
-  ,pipe(gulp.dest('./'))
+    .bundle()
+    .on ('error',notify)
+    .pipe(source('main.js'))
+    ,pipe(gulp.dest('./'))
 }
 bundler.on('update', bundle);
 
@@ -59,4 +59,13 @@ bundler.on('update', bundle);
 
 gulp.task('build',function(){
   bundle()
+});
+
+//compile the Sass files from main.scss
+
+gulp.task('sass',function(){
+  gulp.src('./sass/main.scss')
+    .pipe(sass().on('error',sass.logError))
+    .pipe(concat('style.css'))
+    .pipe(gulp.dest('./'));
 });
