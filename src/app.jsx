@@ -75,6 +75,46 @@ fetchData: function(){
    }
  },
 
+ updateData: function(){
+   this.setState({
+     weather: citiesWeather[currentCity].weather[0],id,
+     temp: Math.round(citiesWeather[currentCity].main.temp-273.15), //changed to Celcius
+     humidity: Math.round(citiesWeather[currentCity].main.humidity),
+     wind: Math.round(citiesWeather[currentCity].wind.speed)
+   });
+ },
+
+ // Called before the render method is executed
+ componentWillMount: function(){
+   query= location.search.split('=')[1];
+
+   //figure out if we need to display multiple cities
+
+   if (query !== undefined){
+     cities = query.split(',');
+
+     // set the interval to load new cities
+     if (cities.length >1 ){
+       setInterval((function)(){
+         currentCity++;
+         if (currentCity === cities.length){
+           currentCity =0;
+         }
+         this.fetchData(); //Reload cityy ever 5 seconds
+       }).bind(this), 5000);
+     }
+   }
+   else {
+     cities[0]= 'Toronto'; // sets default city
+   }
+
+   // create a timer to clear the cache after 5 minutes
+   setInterval(function(){
+     cities = [];
+   }, (1000 *60 *5));
+   this.fetchData();
+ },
+
 // Assign the React component to a DOM element
 var element = React.createElement(Weather, {});
 ReactDOM.render(element, document.querySelector('.container'));
