@@ -69,3 +69,31 @@ gulp.task('sass',function(){
     .pipe(concat('style.css'))
     .pipe(gulp.dest('./'));
 });
+
+// Live reload server settings
+
+gulp.task('serve', function(done){
+  gulp.src('')
+    .pipe(server({
+      livereolad:{
+        enable: true,
+        filter: function(filepath,cb){
+          if(/main.js/.test(filepath)){
+            cb(true)
+          }
+          else if (/style.css/.test(filepath)){
+            cb(true)
+          }
+        }
+      },
+      open:true
+    }));
+});
+
+// Watch for changes in the SASS files
+gulp.task('watch', function(){
+  gulp.watch('./sass/**/*.scss',['sass']);
+});
+
+// Run tasks in a specific order
+gulp.task('default', ['build', 'serve', 'sass', 'watch']);
